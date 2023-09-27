@@ -25,7 +25,7 @@ export const Image = () => {
     e.preventDefault();
     let formData = new FormData();
 
-    formData.append("nickname", "nicknamenewaaa")
+    formData.append("nickname", "nickname")
     formData.append("real_name", "real_name")
     formData.append("origin_description", "origin_description")
     formData.append("superpowers", "superpowers")
@@ -36,15 +36,22 @@ export const Image = () => {
     });
     console.log(formData)
 
+    // try {
+    //   const res = await axios.get(`http://localhost:8080/api/superhero`);
+    // } catch (error) {
+    //   console.log(err.massage)
+    // }
+
     axios.post("http://localhost:8080/api/superhero", formData,  {
           headers:{
             'content-Type': 'multipart/form-data'
           }  
-    })
-    .then(res => {
+    }).then(res => {
       setState(res.data)
       console.log(res.data)
       // setImage(res.data?.images[0])
+     }).catch(err => {
+      console.log(err.massage)
      })
 
 
@@ -52,6 +59,41 @@ export const Image = () => {
     // const body = await response.json();
     // console.log(response)
   }
+
+  const changeFile = async (e) => {
+    e.preventDefault();
+    let formData = new FormData();
+
+    formData.append("nickname", "123")
+    formData.append("real_name", "real_name")
+    formData.append("origin_description", "origin_description")
+    formData.append("superpowers", "superpowers")
+    formData.append("catch_phrase", "catch_phrase")
+    // formData.append("image", image)
+    image.forEach((images, index) => {
+      formData.append(`image`, images);
+    });
+    console.log(formData)
+
+    axios.put("http://localhost:8080/api/superhero", formData,  {
+          headers:{
+            'content-Type': 'multipart/form-data'
+          }  
+    }).then(res => {
+        setState(res.data)
+        console.log(res.data)
+      // setImage(res.data?.images[0])
+     }).catch(err => {
+      console.log(err.massage)
+     })
+
+
+    // setImage(response)
+    // const body = await response.json();
+    // console.log(response)
+  }
+
+
 
   return (
     <div className="image-container">
@@ -83,6 +125,7 @@ export const Image = () => {
       */}
 
         <button className="btn" onClick={(e)=>sendFile(e)}> POST</button>
+        <button className="btn" onClick={(e)=>changeFile(e)}> PUT</button>
     </div>
 
   )
