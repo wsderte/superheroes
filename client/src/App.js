@@ -1,13 +1,15 @@
 import './App.css';
-import { Main } from './components/main/main';
+import { Main } from './pages/main/main';
+import { Hero } from './pages/hero/hero';
+import { Image } from './pages/image/image';
 
 function App() {
 
   return (
     <div className="App">
-      <header className="App-head">Header</header>
-      <a>awdaw</a>
       <Main/>
+      <Image/>
+      {/* <Hero/> */}
     </div>
   );
 }

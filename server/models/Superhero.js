@@ -5,7 +5,7 @@ const superheroSchema = new Schema({
     nickname: {
         type: String,
         required: true,
-        // unique: true,
+        unique: true,
     },
     real_name: {
         type: String,

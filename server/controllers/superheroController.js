@@ -1,10 +1,48 @@
 import { Superheroes } from '../models/Superhero.js'
+import sharp from "sharp";
+import mongoose from 'mongoose'
+import { config } from '../config.js'
+
 
 const SuperheroController = {
   createSuperhero: async (req, res) => {
+    const { nickname, real_name, origin_description, superpowers,catch_phrase } = req.body;
+    const featuredImage = req.file;
+
+    if(!req.body) {
+      res.status(400).send({
+          message: "Data to update can not be empty!"
+      });
+    }
+
     try {
-        const superhero = new Superheroes(req.body);
+        const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
+        if(nicknameExist){
+          res.status(400).send({
+            message: "Nickname Already exist!"
+          });
+          throw createHttpError(409, "Nickname already taken. Please choose a different one.");
+        }
+
+        const superheroId = new mongoose.Types.ObjectId();
+
+        const featuredImageDestinationPath = "/images/"+ superheroId  + ".png";
+
+        await sharp(featuredImage.buffer)
+            .resize(700, 450)
+            .toFile("../server"+ featuredImageDestinationPath);
+
+        const superhero = new Superheroes({
+          _id: superheroId,
+          nickname,
+          real_name,
+          origin_description,
+          superpowers,
+          catch_phrase,
+          images: [config.serverUrl +featuredImageDestinationPath]
+        });
         await superhero.save();
+
         res.status(201).json(superhero);
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -12,7 +50,18 @@ const SuperheroController = {
   },
 
   findAll: async (req, res) => {
+    const page = parseInt(req.query.page || "1");
+    const pageSize = 6;
+
     try {
+      // const getBlogPostsQuery = BlogPostModel
+      //       .find(filter)
+      //       .sort({ _id: -1 })
+      //       .skip((page - 1) * pageSize)
+      //       .limit(pageSize)
+      //       .populate("author")
+      //       .exec();
+
         const superhero = await Superheroes.find();
         res.status(200).json(superhero);
     } catch(error) {
