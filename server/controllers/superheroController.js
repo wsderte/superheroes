@@ -7,7 +7,9 @@ import { config } from '../config.js'
 const SuperheroController = {
   createSuperhero: async (req, res) => {
     const { nickname, real_name, origin_description, superpowers,catch_phrase } = req.body;
-    const featuredImage = req.file;
+
+    const featuredImages = req.files
+    // console.log(featuredImages)
 
     if(!req.body) {
       res.status(400).send({
@@ -24,13 +26,19 @@ const SuperheroController = {
           throw createHttpError(409, "Nickname already taken. Please choose a different one.");
         }
 
+        let imageArray = []
+
         const superheroId = new mongoose.Types.ObjectId();
 
-        const featuredImageDestinationPath = "/images/"+ superheroId  + ".png";
+        for (const item of featuredImages) {
+          const featuredImageDestinationPath = "/images/"+ Math.round(Math.random() * 1E9) + ".png";
 
-        await sharp(featuredImage.buffer)
+          await sharp(item.buffer)
             .resize(700, 450)
             .toFile("../server"+ featuredImageDestinationPath);
+          
+            imageArray.push(config.serverUrl + featuredImageDestinationPath)
+        }
 
         const superhero = new Superheroes({
           _id: superheroId,
@@ -39,8 +47,9 @@ const SuperheroController = {
           origin_description,
           superpowers,
           catch_phrase,
-          images: [config.serverUrl +featuredImageDestinationPath]
+          images: imageArray
         });
+        
         await superhero.save();
 
         res.status(201).json(superhero);

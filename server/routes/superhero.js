@@ -7,7 +7,9 @@ const superheroRouter = express.Router();
 superheroRouter
   .route('/')
     .get(SuperheroController.findAll)
-    .post( featuredImageUpload.single("image"), SuperheroController.createSuperhero)
+    .post(featuredImageUpload.array('image', 4), SuperheroController.createSuperhero)
+    
+// featuredImageUpload.array('image', 4),
 
 superheroRouter
   .route('/:id')
