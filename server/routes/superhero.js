@@ -7,14 +7,14 @@ const superheroRouter = express.Router();
 superheroRouter
   .route('/')
     .get(SuperheroController.findAll)
-    .post(featuredImageUpload.array('image', 4), SuperheroController.createSuperhero)
+    .post(featuredImageUpload.array('image', 8), SuperheroController.createSuperhero)
     
 // featuredImageUpload.array('image', 4),
 
 superheroRouter
   .route('/:id')
     .get(SuperheroController.findOne)
-    .put(featuredImageUpload.array('image', 4),SuperheroController.update)
+    .put(featuredImageUpload.array('image', 8),SuperheroController.update)
     .delete(SuperheroController.destroy)
 
 export default superheroRouter

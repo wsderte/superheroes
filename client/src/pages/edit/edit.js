@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from "react-router-dom";
 import axios from 'axios';
 import "./edit.css"
+import { SelectedImages } from './../../components/selectedImages/selectedImages';
 
 export const Edit = () => {
     const [state, setState] = useState(null);
@@ -34,14 +35,8 @@ export const Edit = () => {
       const imagesArray = selectedFilesArray.map((file) => {
         return [URL.createObjectURL(file), file]
       });
-
-      // const dataArray = selectedFilesArray.map((file) => {
-      //   // console.log(file)
-      //   return file
-      // });
   
       setSelectedImages((previousImages) => previousImages.concat(imagesArray));
-      // setImagesToUpdate((previousImages) => previousImages.concat(dataArray));
       e.target.value = "";
     };
 
@@ -57,12 +52,7 @@ export const Edit = () => {
 
     const deleteStateHandler = (image) => {
       setState({...state, "images": state.images.filter((elem) => elem !== image)});
-      console.log(state)
-    }
-
-    const consoleStateHandler = () => {
-     console.log(state)
-     console.log(selectedImages)
+      // console.log(state)
     }
 
     const deleteHandler = (image) => {
@@ -94,7 +84,7 @@ export const Edit = () => {
       }).then(res => {
           setState(res.data)
           setSelectedImages([])
-          // console.log(res.data, "RESULT")
+          console.log(res.data, "RESULT")
        }).catch(err => {
         console.log(err.massage)
        })
@@ -149,18 +139,17 @@ export const Edit = () => {
                     onChange={(e) => handleChange(e)}
                   />
                 </div>
-
                   <div className="edit-button-container">
                     <button className="hero-button edit" onClick={(e)=>changeFile(e)}>SUBMIT</button> 
-                    <button className="hero-button edit" onClick={()=>{handleCancel()}}>CANCEL</button>
+                    <button className="hero-button edit" onClick={()=>handleCancel()}>CANCEL</button>
                   </div>
-
                 </div>
               </div>
+
               <div className="edit-right">
                 <label>
                   + Add Images
-                  <span>up to 4 images</span>
+                  <span>up to 8 images</span>
                   <input
                   type="file"
                   name="images"
@@ -171,32 +160,11 @@ export const Edit = () => {
                 </label>
 
                 <div className="images">
-                  {state.images &&
-                    state.images.map((image, index) => (
-                      <div key={image} className="image">
-                        <img src={image} height="120" width="120" alt="upload" />
-                        <button onClick={() => deleteStateHandler(image)}>
-                          delete image
-                        </button>
-                        <p>{index + 1}</p>
-                      </div>
-                    )
-                  )}
-                  {selectedImages &&
-                    selectedImages.map((image, index) => {
-                    return (
-                      <div key={image[0]} className="image">
-                      <img src={image[0]} height="120" width="120" alt="upload" />
-                      <button onClick={() => deleteHandler(image[0])}>
-                        delete image
-                      </button>
-                      <p>{index + 1}</p>
-                      </div>
-                    );
-                  })}
+                  <SelectedImages images={state.images} deleteState={deleteStateHandler} isSub={false}/>
+                  <SelectedImages images={selectedImages} deleteState={deleteHandler} isSub={true}/>
                 </div>
-
               </div>
+
             </div>
          : null}
     </div>

@@ -115,12 +115,13 @@ const SuperheroController = {
       superheroToEdit.superpowers = superpowers;
       superheroToEdit.catch_phrase = catch_phrase;
 
-      if(images && images[0]){
-        let imageArray = []
+      let imageArray =  []
+   
+      if( req.body.images[0] ){
+        imageArray = req.body.images.split(",")
+      }
 
-        if( Array.isArray(superheroToEdit.images) ){
-          imageArray = superheroToEdit.images
-        }
+      if(images && images[0]){
 
         for (const item of images) {
           const ImageDestinationPath = "/images/"+ Math.round(Math.random() * 1E9) + ".png";
@@ -131,9 +132,9 @@ const SuperheroController = {
 
           imageArray.push(config.serverUrl + ImageDestinationPath)
         }
-
-        superheroToEdit.images = imageArray
       }
+      
+      superheroToEdit.images = imageArray
 
       await superheroToEdit.save();
 
