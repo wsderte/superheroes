@@ -8,6 +8,7 @@
     gap: 3vh;
     justify-content: center;
     justify-items: center;
+    min-height: 680px;
 
     /* background: rgba(90, 130, 195, 0.2); */
     /* height: 100vh; */

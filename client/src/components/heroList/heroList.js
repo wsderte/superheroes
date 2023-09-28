@@ -7,7 +7,7 @@ export const HeroList = ({state}) => {
     <>
         {state ? 
           state.map(hero => (
-            <div className="hero-list--container" key={hero.id + hero.nickname}>
+            <div className="hero-list--container" key={hero._id}>
               <img className="hero-list--image" height="220" width="280" src={hero.images[0]} alt="img"/>
               <div className="hero-list--card">
                 <div className="hero-list--nickname">{hero.nickname}</div> 

@@ -55,6 +55,7 @@ export const Create = () => {
           // console.log(res.data, "RESULT")
         }).catch(err => {
           console.log(err.massage)
+          setFieldsError(err.massage)
         })
       } else {
         setFieldsError("Please, fill all fields")

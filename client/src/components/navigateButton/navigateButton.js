@@ -11,7 +11,7 @@ export const NavigateButton = ({link, text}) => {
 
   return (
     <>
-        <button className="hero-button edit" onClick={()=>handleNavigate()}>{text}</button>
+        <button className="hero-button more" onClick={()=>handleNavigate()}>{text}</button>
     </>
   )
 }

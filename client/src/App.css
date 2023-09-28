@@ -80,7 +80,7 @@ img {
 
 .image button {
   position: absolute;
-  bottom: 0;
+  bottom: 3px;
   right: 0;
   cursor: pointer;
   border: none;

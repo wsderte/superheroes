@@ -6,7 +6,7 @@
     width: fit-content;
     flex-direction: column;
 
-    border: 1px solid black;
+    /* border: 1px solid black; */
     /* cursor: pointer; */
     font-size: large;
 }

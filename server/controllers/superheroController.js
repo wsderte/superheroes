@@ -21,13 +21,13 @@ const SuperheroController = {
     }
 
     try {
-        const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
-        if(nicknameExist){
-          // res.status(400).send({
-          //   message: "Nickname Already exist!"
-          // });
-          throw createHttpError(409, "Nickname already taken. Please choose a different one.");
-        }
+        // const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
+        // if(nicknameExist){
+        //   // res.status(400).send({
+        //   //   message: "Nickname Already exist!"
+        //   // });
+        //   throw createHttpError(409, "Nickname already taken. Please choose a different one.");
+        // }
 
         let imageArray = []
         // const superheroId = new mongoose.Types.ObjectId();
@@ -97,11 +97,10 @@ const SuperheroController = {
  
   update: async (req, res) => {
     if(!req.body) {
-        // res.status(400).send({
-        //     message: "Data to update can not be empty!"
-        // });
-        throw createHttpError(400, "Data to update can not be empty!");
-       
+        res.status(404).send({
+            message: "Data to update can not be empty!"
+        });
+        // throw createHttpError(400, "Data to update can not be empty!");
     }
 
     const { nickname, real_name, origin_description, superpowers, catch_phrase } = req.body;
@@ -109,16 +108,19 @@ const SuperheroController = {
     const id = req.params.id;
 
     try {
-      const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
+      // const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
 
-      if (nicknameExist && !nicknameExist._id.equals(id)) {
-        throw createHttpError(409, "Nickname already taken. Please choose a different one.");
-      }
+      // if (nicknameExist && !nicknameExist._id.equals(id)) {
+      //   throw createHttpError(409, "Nickname already taken. Please choose a different one.");
+      // }
 
-      const superheroToEdit = await Superheroes.findById(id).exec();
+      const superheroToEdit = await Superheroes.findById(id);
 
       if (!superheroToEdit) {
-        throw createHttpError(404);
+        res.status(404).send({
+          message: "Data to update can not be empty!"
+      });
+        // throw createHttpError(404);
       }
 
       superheroToEdit.nickname = nickname;
