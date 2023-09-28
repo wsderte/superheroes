@@ -39,5 +39,8 @@ textarea {
 
 .edit-button-container{
     min-width: 200px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
     /* width: fit-content; */
 }

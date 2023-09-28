@@ -14,7 +14,7 @@ superheroRouter
 superheroRouter
   .route('/:id')
     .get(SuperheroController.findOne)
-    .put(featuredImageUpload.array('image', 8),SuperheroController.update)
+    .put(featuredImageUpload.array('image', 8), SuperheroController.update)
     .delete(SuperheroController.destroy)
 
 export default superheroRouter

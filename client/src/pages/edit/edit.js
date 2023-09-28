@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from 'react'
+import { useParams } from "react-router-dom";
 import axios from 'axios';
 import "./edit.css"
 import { SelectedImages } from './../../components/selectedImages/selectedImages';
+import { Form } from '../../components/form/Form';
+import Upload from './../../components/upload/upload';
+import { NavigateButton } from './../../components/navigateButton/navigateButton';
+import { generateForm } from './../../utils/createForm';
+import { checkData } from './../../utils/checkData';
 
 export const Edit = () => {
     const [state, setState] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
     
     const {id} = useParams();
-    const navigate = useNavigate()
-    
+
+    let imagesLength = selectedImages.length || 0;
+
+    if(state?.images.length){
+      imagesLength += state.images.length
+    }
+
     useEffect(() => {
       const callBackendAPI = async () => {
         const response = await fetch(`http://localhost:8080/api/superhero/${id}`);
         const body = await response.json();
           
-        if (response.status !== 200) {
-          throw Error(body.message)
-        }
+        if (response.status !== 200) throw Error(body.message)
         return body;
       };
 
@@ -27,144 +35,62 @@ export const Edit = () => {
       .catch(err => console.log(err));
     }, [id])
 
-    const onSelectFile = (e) => {
-      e.preventDefault();
-      const selectedFiles = e.target.files;
-      const selectedFilesArray = Array.from(selectedFiles);
-  
-      const imagesArray = selectedFilesArray.map((file) => {
-        return [URL.createObjectURL(file), file]
-      });
-  
-      setSelectedImages((previousImages) => previousImages.concat(imagesArray));
-      e.target.value = "";
-    };
-
-    const handleCancel = () => {
-        navigate("/")
-    }
-
-    const handleChange = (e) => {
-      e.preventDefault();
-      setState({ ...state, [e.target.name]: e.target.value });
-      // setImagesToUpdate([{ ...state, [e.target.name]: e.target.value }]);
-    }
-
     const deleteStateHandler = (image) => {
       setState({...state, "images": state.images.filter((elem) => elem !== image)});
-      // console.log(state)
     }
 
     const deleteHandler = (image) => {
       setSelectedImages(selectedImages.filter((elem) => elem[0] !== image));
-      // setImagesToUpdate(imagesToUpdate.filter((elem) => elem !== image));
       URL.revokeObjectURL(image);
     }
 
-    const changeFile = async (e) => {
-      e.preventDefault();
-      let formData = new FormData();
+    const changeFile = async () => {
+      if(checkData(state, selectedImages)){
+      
+        let formData = generateForm(state, selectedImages)
+        // console.log(formData, "form with util")
 
-      formData.append("nickname", state.nickname)
-      formData.append("real_name", state.real_name)
-      formData.append("origin_description", state.origin_description)
-      formData.append("superpowers", state.superpowers)
-      formData.append("catch_phrase", state.catch_phrase)
-      formData.append("images", state.images)
-      // formData.append("image", image)
-      selectedImages.forEach((image, index) => {
-        formData.append(`image`, image[1]);
-      });
-      console.log(formData)
-  
-      axios.put(`http://localhost:8080/api/superhero/${id}`, formData,  {
+        axios.put(`http://localhost:8080/api/superhero/${id}`, formData,  {
             headers:{
               'content-Type': 'multipart/form-data'
             }  
-      }).then(res => {
+        }).then(res => {
           setState(res.data)
           setSelectedImages([])
-          console.log(res.data, "RESULT")
-       }).catch(err => {
-        console.log(err.massage)
-       })
-  
-  
-      // setImage(response)
-      // const body = await response.json();
-      // console.log(response)
+          // console.log(res.data, "RESULT")
+        }).catch(err => {
+          console.log(err.massage)
+        })
+      } else {
+        console.log("Fill all inpust")
+      }
+
     }
   
-
     return (
-        <div className="edit-wrap">
+    <div className="edit-wrap">
         {state ? 
             <div className="edit-container" key={state.id + "1"}>
               <div className="edit-left"> 
                 <div className="form-group">
-                <div className="edit-inputs-container">
-                  <input
-                    className="edit-input"
-                    type="text"
-                    name="nickname"
-                    value={ state.nickname }
-                    onChange={(e) => handleChange(e)}
-                  />
-                  <input
-                    className="edit-input"
-                    type="text"
-                    name="real_name"
-                    value={ state.real_name }
-                    onChange={(e) => handleChange(e)}
-                  />
-                  <textarea
-                    className="edit-input"
-                    type="text"
-                    name="origin_description"
-                    value={ state.origin_description}
-                    onChange={(e) => handleChange(e)}
-                  />
-                  <textarea
-                    className="edit-input"
-                    type="text"
-                    name="superpowers"
-                    value={ state.superpowers }
-                    onChange={(e) => handleChange(e)}
-                  />
-                  <textarea
-                    className="edit-input "
-                    type="text"
-                    name="catch_phrase"
-                    value={ state.catch_phrase}
-                    onChange={(e) => handleChange(e)}
-                  />
-                </div>
+                  <Form  state={state} set={setState} />
                   <div className="edit-button-container">
                     <button className="hero-button edit" onClick={(e)=>changeFile(e)}>SUBMIT</button> 
-                    <button className="hero-button edit" onClick={()=>handleCancel()}>CANCEL</button>
+                    <NavigateButton link={"/"} text={"CANCEL"}/>
                   </div>
                 </div>
               </div>
 
               <div className="edit-right">
-                <label>
-                  + Add Images
-                  <span>up to 8 images</span>
-                  <input
-                  type="file"
-                  name="images"
-                  onChange={ onSelectFile}
-                  multiple
-                  accept="image/png , image/jpeg, image/webp"
-                  />
-                </label>
-
+                <Upload setSelectedImages={setSelectedImages}/>
+                {imagesLength > 8 ?
+                 <div className="aw">Can handle only 8 images</div> 
+                  : imagesLength}
                 <div className="images">
-                  <SelectedImages images={state.images} deleteState={deleteStateHandler} isSub={false}/>
-                  <SelectedImages images={selectedImages} deleteState={deleteHandler} isSub={true}/>
+                  <SelectedImages images={state.images} doWithState={deleteStateHandler} isSub={false}/>
+                  <SelectedImages images={selectedImages} doWithState={deleteHandler} isSub={true}/>
                 </div>
               </div>
-
             </div>
          : null}
     </div>

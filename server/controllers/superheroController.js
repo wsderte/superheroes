@@ -10,6 +10,9 @@ const SuperheroController = {
     const { nickname, real_name, origin_description, superpowers,catch_phrase } = req.body;
     const images = req.files
 
+    console.log(images, "images")
+    console.log(req.body, "req.body")
+
     if(!req.body) {
       res.status(400).send({
           message: "Data to update can not be empty!"
@@ -28,6 +31,11 @@ const SuperheroController = {
         let imageArray = []
         const superheroId = new mongoose.Types.ObjectId();
 
+        // if( req.body.images[0] ){
+        //   imageArray = req.body.images.split(",")
+        // }
+
+      if(images && images[0]){
         for (const item of images) {
           const imageDestinationPath = "/images/"+ Math.round(Math.random() * 1E9) + ".png";
 
@@ -37,6 +45,7 @@ const SuperheroController = {
           
             imageArray.push(config.serverUrl + imageDestinationPath)
         }
+      }
 
         const superhero = new Superheroes({
           _id: superheroId,

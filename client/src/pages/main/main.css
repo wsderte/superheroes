@@ -1,11 +1,11 @@
 .main-wrap{
-    padding: 2rem;
+    padding: 3rem;
     display: grid;
     grid-template-columns: auto auto auto;
     grid-template-rows: auto auto;
     grid-auto-flow: row dense;
 
-    gap: 5vw;
+    gap: 3vw;
     justify-content: center;
     justify-items: center;
 

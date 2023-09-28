@@ -22,7 +22,8 @@ export const Main = () => {
     }, [])
 
   return (
-    <div className="main-wrap">
+    <div>
+      <div className="main-wrap">
         {state ? 
           state.map(hero => (
             <div className="main-container" key={hero.id + hero.nickname}>
@@ -41,6 +42,8 @@ export const Main = () => {
             </div>
           ))
          : null}
+      </div>
+      <div>1</div>
     </div>
   )
 }
