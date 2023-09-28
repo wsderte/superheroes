@@ -20,7 +20,8 @@ export const Create = () => {
         images: []
     });
     const [selectedImages, setSelectedImages] = useState([]);
-
+    const [fieldsError, setFieldsError] = useState("");
+    
     let imagesLength = selectedImages.length || 0;
 
     if(state?.images.length){
@@ -43,7 +44,7 @@ export const Create = () => {
       if(checkData(state, selectedImages)){
         let formData = generateForm(state, selectedImages)
         console.log(formData, "form with util")
-
+        setFieldsError("")
 
         axios.post(`http://localhost:8080/api/superhero/`, formData,  {
             headers:{
@@ -56,7 +57,7 @@ export const Create = () => {
           console.log(err.massage)
         })
       } else {
-        console.log("Fill all fields")
+        setFieldsError("Please, fill all fields")
       }
     }
   
@@ -67,6 +68,7 @@ export const Create = () => {
               <div className="edit-left"> 
                 <div className="form-group">
                   <Form  state={state} set={setState} />
+                  {fieldsError ? <div className="form-error">{fieldsError}</div> : null}
                   <div className="edit-button-container">
                     <button className="hero-button edit" onClick={(e)=>sendFile(e)}>SUBMIT</button> 
                     <NavigateButton link={"/"} text={"CANCEL"}/>

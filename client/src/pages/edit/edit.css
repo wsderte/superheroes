@@ -44,3 +44,8 @@ textarea {
     gap: 10px;
     /* width: fit-content; */
 }
+
+.form-error{
+    color: rgb(150, 23, 23);
+    font-weight: 900;
+}

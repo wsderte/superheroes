@@ -6,14 +6,17 @@ import { SelectedImages } from './../../components/selectedImages/selectedImages
 import { Form } from '../../components/form/Form';
 import Upload from './../../components/upload/upload';
 import { NavigateButton } from './../../components/navigateButton/navigateButton';
+import { useNavigate } from "react-router-dom";
 import { generateForm } from './../../utils/createForm';
 import { checkData } from './../../utils/checkData';
 
 export const Edit = () => {
     const [state, setState] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
+    const [fieldsError, setFieldsError] = useState("");
     
     const {id} = useParams();
+    const navigate = useNavigate()
 
     let imagesLength = selectedImages.length || 0;
 
@@ -46,9 +49,8 @@ export const Edit = () => {
 
     const changeFile = async () => {
       if(checkData(state, selectedImages)){
-      
+        setFieldsError("")
         let formData = generateForm(state, selectedImages)
-        // console.log(formData, "form with util")
 
         axios.put(`http://localhost:8080/api/superhero/${id}`, formData,  {
             headers:{
@@ -57,12 +59,13 @@ export const Edit = () => {
         }).then(res => {
           setState(res.data)
           setSelectedImages([])
+          navigate("/")
           // console.log(res.data, "RESULT")
         }).catch(err => {
           console.log(err.massage)
         })
       } else {
-        console.log("Fill all inpust")
+          setFieldsError("Please, Fill all fields")
       }
 
     }
@@ -74,6 +77,9 @@ export const Edit = () => {
               <div className="edit-left"> 
                 <div className="form-group">
                   <Form  state={state} set={setState} />
+                  
+                  {fieldsError ? <div className="form-error">{fieldsError}</div> : null}
+
                   <div className="edit-button-container">
                     <button className="hero-button edit" onClick={(e)=>changeFile(e)}>SUBMIT</button> 
                     <NavigateButton link={"/"} text={"CANCEL"}/>

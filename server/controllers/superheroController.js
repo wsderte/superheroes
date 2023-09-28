@@ -1,6 +1,6 @@
 import { Superheroes } from '../models/Superhero.js'
 import sharp from "sharp";
-import mongoose from 'mongoose'
+// import mongoose from 'mongoose'
 import { config } from '../config.js'
 import fs from "fs";
 
@@ -10,26 +10,27 @@ const SuperheroController = {
     const { nickname, real_name, origin_description, superpowers,catch_phrase } = req.body;
     const images = req.files
 
-    console.log(images, "images")
-    console.log(req.body, "req.body")
+    // console.log(images, "images")
+    // console.log(req.body, "req.body")
 
     if(!req.body) {
-      res.status(400).send({
-          message: "Data to update can not be empty!"
-      });
+      // res.status(400).send({
+      //     message: "Data to update can not be empty!"
+      // });
+      throw createHttpError(400, "Data to update can not be empty!");
     }
 
     try {
         const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
         if(nicknameExist){
-          res.status(400).send({
-            message: "Nickname Already exist!"
-          });
+          // res.status(400).send({
+          //   message: "Nickname Already exist!"
+          // });
           throw createHttpError(409, "Nickname already taken. Please choose a different one.");
         }
 
         let imageArray = []
-        const superheroId = new mongoose.Types.ObjectId();
+        // const superheroId = new mongoose.Types.ObjectId();
 
         // if( req.body.images[0] ){
         //   imageArray = req.body.images.split(",")
@@ -48,7 +49,7 @@ const SuperheroController = {
       }
 
         const superhero = new Superheroes({
-          _id: superheroId,
+          // _id: superheroId,
           nickname,
           real_name,
           origin_description,
@@ -96,9 +97,11 @@ const SuperheroController = {
  
   update: async (req, res) => {
     if(!req.body) {
-        res.status(400).send({
-            message: "Data to update can not be empty!"
-        });
+        // res.status(400).send({
+        //     message: "Data to update can not be empty!"
+        // });
+        throw createHttpError(400, "Data to update can not be empty!");
+       
     }
 
     const { nickname, real_name, origin_description, superpowers, catch_phrase } = req.body;

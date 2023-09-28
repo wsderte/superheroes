@@ -2,7 +2,7 @@ import { Route,Routes} from "react-router-dom";
 
 import './App.css';
 import { Main } from './pages/main/main';
-import { Card } from './pages/card/card';
+// import { Card } from './pages/card/card';
 import { Image } from './pages/image/image';
 import { Edit } from './pages/edit/edit';
 import { Hero } from './pages/hero/hero';
