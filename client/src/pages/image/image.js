@@ -42,17 +42,18 @@ export const Image = () => {
     //   console.log(err.massage)
     // }
 
-    axios.post("http://localhost:8080/api/superhero", formData,  {
-          headers:{
-            'content-Type': 'multipart/form-data'
-          }  
-    }).then(res => {
-      setState(res.data)
-      console.log(res.data)
-      // setImage(res.data?.images[0])
-     }).catch(err => {
-      console.log(err.massage)
-     })
+
+    // axios.post("http://localhost:8080/api/superhero", formData,  {
+    //       headers:{
+    //         'content-Type': 'multipart/form-data'
+    //       }  
+    // }).then(res => {
+    //   setState(res.data)
+    //   console.log(res.data)
+    //   // setImage(res.data?.images[0])
+    //  }).catch(err => {
+    //   console.log(err.massage)
+    //  })
 
 
     // setImage(response)

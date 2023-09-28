@@ -118,6 +118,10 @@ const SuperheroController = {
       if(images && images[0]){
         let imageArray = []
 
+        if( Array.isArray(superheroToEdit.images) ){
+          imageArray = superheroToEdit.images
+        }
+
         for (const item of images) {
           const ImageDestinationPath = "/images/"+ Math.round(Math.random() * 1E9) + ".png";
 
