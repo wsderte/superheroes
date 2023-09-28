@@ -66,20 +66,20 @@ const SuperheroController = {
   },
 
   findAll: async (req, res) => {
-    const page = parseInt(req.query.page || "1");
+    const page = parseInt(req.params.page || "1");
     const pageSize = 5;
 
     try {
-      // const getBlogPostsQuery = BlogPostModel
-      //       .find(filter)
-      //       .sort({ _id: -1 })
-      //       .skip((page - 1) * pageSize)
-      //       .limit(pageSize)
-      //       .populate("author")
-      //       .exec();
+        const superhero = await Superheroes
+          .find()
+          .skip((page - 1) * pageSize)
+          .limit(pageSize)
 
-        const superhero = await Superheroes.find();
-        res.status(200).json(superhero);
+        const superheroCount = await Superheroes.countDocuments().exec()
+
+        const totalPages = Math.ceil(superheroCount / pageSize);
+        // const superhero = await Superheroes.find();
+        res.status(200).json({superhero, page, totalPages});
     } catch(error) {
         res.status(404).json({message: error.message});
     }

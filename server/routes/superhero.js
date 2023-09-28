@@ -17,4 +17,8 @@ superheroRouter
     .put(featuredImageUpload.array('image', 8), SuperheroController.update)
     .delete(SuperheroController.destroy)
 
+superheroRouter
+  .route('/all/:page')
+    .get(SuperheroController.findAll)   
+
 export default superheroRouter

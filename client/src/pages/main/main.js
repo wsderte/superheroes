@@ -1,50 +1,44 @@
 import React, {useEffect, useState} from 'react'
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import "./main.css"
+import { Pagination } from '../../components/pagination/pagination';
+import { HeroList } from '../../components/heroList/heroList';
 
 export const Main = () => {
     const [state, setState] = useState(null);
-    
+    const [currentPage, setCurrentPage] = useState("1");
+    const [totalPages, setTotalPages] = useState(1);
+
+    const newArray = []
+    for(let i=1; i<= totalPages; i++) {
+      newArray.push(i)
+    }
+
     useEffect(() => {
         const callBackendAPI = async () => {
-          const response = await fetch('http://localhost:8080/api/superhero');
+          const response = await fetch(`http://localhost:8080/api/superhero/all/${currentPage}`);
           const body = await response.json();
         
-          if (response.status !== 200) {
-            throw Error(body.message)
-          }
+          if (response.status !== 200) throw Error(body.message)
+
           return body;
         };
 
         callBackendAPI()
-        .then(res => setState(res))
-        .catch(err => console.log(err));
-    }, [])
+          .then(res => {
+            setState(res.superhero)
+            setTotalPages(res.totalPages)
+          })
+          .catch(err => console.log(err));
+    }, [currentPage])
 
   return (
-    <div>
+    <>
       <div className="main-wrap">
-        {state ? 
-          state.map(hero => (
-            <div className="main-container" key={hero.id + hero.nickname}>
-              <img className="main-image" height="220" width="280" src={hero.images[0]} alt="img"/>
-              <div className="main-card">
-                <div className="main-nickname">{hero.nickname}</div> 
-                <div className="main-btn-container">
-                  <Link to={`/hero/${hero._id}`}>
-                    <button className="main-button more">MORE </button>
-                  </Link>
-                  <Link to={`/edit/${hero._id}`}>
-                    <button className="main-button edit">EDIT</button> 
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))
-         : null}
+        <HeroList state={state}/>
       </div>
-      <div>1</div>
-    </div>
+        <Pagination array={newArray} handler={setCurrentPage} />
+    </>
   )
 }
 
