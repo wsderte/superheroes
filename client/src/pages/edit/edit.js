@@ -60,7 +60,6 @@ export const Edit = () => {
           setState(res.data)
           setSelectedImages([])
           navigate("/")
-          // console.log(res.data, "RESULT")
         }).catch(err => {
           console.log(err.massage)
         })

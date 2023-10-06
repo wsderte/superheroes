@@ -9,7 +9,7 @@ superheroRouter
     .get(SuperheroController.findAll)
     .post(featuredImageUpload.array('image', 8), SuperheroController.createSuperhero)
     
-// featuredImageUpload.array('image', 4),
+// featuredImageUpload.single('image'),
 
 superheroRouter
   .route('/:id')

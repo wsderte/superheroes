@@ -43,7 +43,6 @@ export const Create = () => {
       e.preventDefault();
       if(checkData(state, selectedImages)){
         let formData = generateForm(state, selectedImages)
-        console.log(formData, "form with util")
         setFieldsError("")
 
         axios.post(`http://localhost:8080/api/superhero/`, formData,  {
@@ -52,9 +51,7 @@ export const Create = () => {
             }  
         }).then(res => {
           navigate("/")
-          // console.log(res.data, "RESULT")
         }).catch(err => {
-          console.log(err.massage)
           setFieldsError(err.massage)
         })
       } else {

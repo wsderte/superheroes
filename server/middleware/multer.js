@@ -35,5 +35,3 @@ export const featuredImageUpload = multer({
 });
 
 export const middleware = multer({storage, fileFilter});
-
-// export default multer({storage, fileFilter});

@@ -1,7 +1,12 @@
 import React from 'react'
 import "./pagination.css"
 
-export const Pagination = ({array, handler}) => {
+export const Pagination = ({totalPages, handler}) => {
+  const array = []
+  for(let i=1; i<= totalPages; i++) {
+    array.push(i)
+  }
+
   return (
     <>
       <div className='pagination'>

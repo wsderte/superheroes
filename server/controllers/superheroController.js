@@ -1,40 +1,19 @@
 import { Superheroes } from '../models/Superhero.js'
 import sharp from "sharp";
-// import mongoose from 'mongoose'
 import { config } from '../config.js'
 import fs from "fs";
-
 
 const SuperheroController = {
   createSuperhero: async (req, res) => {
     const { nickname, real_name, origin_description, superpowers,catch_phrase } = req.body;
     const images = req.files
 
-    // console.log(images, "images")
-    // console.log(req.body, "req.body")
-
     if(!req.body) {
-      // res.status(400).send({
-      //     message: "Data to update can not be empty!"
-      // });
       throw createHttpError(400, "Data to update can not be empty!");
     }
 
     try {
-        // const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
-        // if(nicknameExist){
-        //   // res.status(400).send({
-        //   //   message: "Nickname Already exist!"
-        //   // });
-        //   throw createHttpError(409, "Nickname already taken. Please choose a different one.");
-        // }
-
-        let imageArray = []
-        // const superheroId = new mongoose.Types.ObjectId();
-
-        // if( req.body.images[0] ){
-        //   imageArray = req.body.images.split(",")
-        // }
+      let imageArray = []
 
       if(images && images[0]){
         for (const item of images) {
@@ -49,7 +28,6 @@ const SuperheroController = {
       }
 
         const superhero = new Superheroes({
-          // _id: superheroId,
           nickname,
           real_name,
           origin_description,
@@ -79,7 +57,6 @@ const SuperheroController = {
         const superheroCount = await Superheroes.countDocuments().exec()
 
         const totalPages = Math.ceil(superheroCount / pageSize);
-        // const superhero = await Superheroes.find();
         res.status(200).json({superhero, page, totalPages});
     } catch(error) {
         res.status(404).json({message: error.message});
@@ -100,7 +77,6 @@ const SuperheroController = {
         res.status(404).send({
             message: "Data to update can not be empty!"
         });
-        // throw createHttpError(400, "Data to update can not be empty!");
     }
 
     const { nickname, real_name, origin_description, superpowers, catch_phrase } = req.body;
@@ -108,19 +84,12 @@ const SuperheroController = {
     const id = req.params.id;
 
     try {
-      // const nicknameExist = await Superheroes.findOne({nickname: req.body.nickname})
-
-      // if (nicknameExist && !nicknameExist._id.equals(id)) {
-      //   throw createHttpError(409, "Nickname already taken. Please choose a different one.");
-      // }
-
       const superheroToEdit = await Superheroes.findById(id);
 
       if (!superheroToEdit) {
         res.status(404).send({
           message: "Data to update can not be empty!"
-      });
-        // throw createHttpError(404);
+        });
       }
 
       superheroToEdit.nickname = nickname;
