@@ -1,44 +1,30 @@
-import React, { useEffect, useState } from 'react'
-import {Link, useParams, useNavigate } from "react-router-dom";
+import React, { useEffect } from 'react'
+import {Link, useParams } from "react-router-dom";
 import { SelectedImages } from './../../components/selectedImages/selectedImages';
-
+import { useFetch } from './../../hook/useFetch';
 import "./hero.css"
+import { DeleteBut } from '../../components/deleteBut/deleteBut';
 
 export const Hero = () => {
-    const [state, setState] = useState(null);
     const {id} = useParams();
-    const navigate = useNavigate()
 
-    const deleteHandler = async () => {
-        const response = await fetch(`http://localhost:8080/api/superhero/${id}`, {
-            method: 'DELETE',
-        })
-        const body = await response.json();
-  
-        if (response.status !== 200) throw Error(body.message)
-
-        navigate("/")
-    }
+    const {data: hero, get, loading, error } = useFetch();
 
     useEffect(() => {
-        const callBackendAPI = async () => {
-          const response = await fetch(`http://localhost:8080/api/superhero/${id}`);
-          const body = await response.json();
-            
-          if (response.status !== 200) throw Error(body.message)
+      get(`http://localhost:8080/api/superhero/${id}`);
+    }, [get, id]);
 
-          return body;
-        };
-
-        callBackendAPI()
-        .then(res => setState([res]))
-        .catch(err => console.log(err));
-    }, [id])
+    if (loading) {
+      return <div>Loading...</div>;
+    }
+  
+    if (error) {
+      return <div>Error: {error}</div>;
+    }
 
     return (
         <div className="hero-wrap">
-        {state ? 
-          state.map(hero => (
+        {hero?.nickname ? 
             <div className="hero-container" key={hero.id + "0"}>
               <div className="hero-left">
                 <h1><span className="hero-span">{"Nickname: "}</span>{hero.nickname}</h1>
@@ -50,12 +36,7 @@ export const Hero = () => {
                     <Link to={`/edit/${hero._id}`}>
                         <button className="hero-button edit">EDIT</button> 
                     </Link>
-                    <button 
-                        className="hero-button more" 
-                        onClick={()=>{deleteHandler()}}
-                    >
-                    DELETE 
-                    </button>
+                    <DeleteBut id ={id}/>
                 </div>
               </div>
 
@@ -67,7 +48,7 @@ export const Hero = () => {
               </div>
 
             </div>
-          ))
+          
          : null}
     </div>
     )
