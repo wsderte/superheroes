@@ -24,7 +24,7 @@ export const Hero = () => {
 
     return (
         <div className="hero-wrap">
-        {hero?.nickname ? 
+          {hero?.nickname ? 
             <div className="hero-container" key={hero.id + "0"}>
               <div className="hero-left">
                 <h1><span className="hero-span">{"Nickname: "}</span>{hero.nickname}</h1>
@@ -49,7 +49,7 @@ export const Hero = () => {
 
             </div>
           
-         : null}
-    </div>
+          : null}
+      </div>
     )
 }

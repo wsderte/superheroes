@@ -9,34 +9,26 @@ import { NavigateButton } from './../../components/navigateButton/navigateButton
 import { useNavigate } from "react-router-dom";
 import { generateForm } from './../../utils/createForm';
 import { checkData } from './../../utils/checkData';
+import { useFetch } from './../../hook/useFetch';
 
 export const Edit = () => {
-    const [state, setState] = useState(null);
     const [selectedImages, setSelectedImages] = useState([]);
     const [fieldsError, setFieldsError] = useState("");
-    
+
     const {id} = useParams();
     const navigate = useNavigate()
+
+    const {data: state, setData: setState, get, loading, error } = useFetch();
+
+    useEffect(() => {
+      get(`http://localhost:8080/api/superhero/${id}`);
+    }, [get, id]);
 
     let imagesLength = selectedImages.length || 0;
 
     if(state?.images.length){
       imagesLength += state.images.length
     }
-
-    useEffect(() => {
-      const callBackendAPI = async () => {
-        const response = await fetch(`http://localhost:8080/api/superhero/${id}`);
-        const body = await response.json();
-          
-        if (response.status !== 200) throw Error(body.message)
-        return body;
-      };
-
-      callBackendAPI()
-      .then(res => setState(res))
-      .catch(err => console.log(err));
-    }, [id])
 
     const deleteStateHandler = (image) => {
       setState({...state, "images": state.images.filter((elem) => elem !== image)});
@@ -66,11 +58,10 @@ export const Edit = () => {
       } else {
           setFieldsError("Please, Fill all fields")
       }
-
     }
   
     return (
-    <div className="edit-wrap">
+      <div className="edit-wrap">
         {state ? 
             <div className="edit-container" key={state.id + "1"}>
               <div className="edit-left"> 
@@ -98,6 +89,6 @@ export const Edit = () => {
               </div>
             </div>
          : null}
-    </div>
+      </div>
     )
 }
